@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/xanzy/go-gitlab"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -85,12 +86,14 @@ func sendMessageToTelegram(token, chatID, message string) {
 	// Send the POST request to Telegram API
 	resp, err := http.Post(telegramAPI, "application/x-www-form-urlencoded", strings.NewReader(data.Encode()))
 	if err != nil {
-		log.Fatalf("Failed to send message to Telegram")
+		log.Fatalf("Failed to send message to Telegram: %v", err)
 	}
-	defer resp.Body.Close() // Proper use of defer to close the response body
+	defer resp.Body.Close()
 
+	// Check for non-200 status code
 	if resp.StatusCode != http.StatusOK {
-		log.Fatalf("Failed to send message. %v", resp)
+		body, _ := io.ReadAll(resp.Body) // Read the response body
+		log.Fatalf("Failed to send message. Status code: %d, Response: %s", resp.StatusCode, body)
 	}
 
 	fmt.Println("Message sent to Telegram successfully!")
