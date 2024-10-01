@@ -42,16 +42,9 @@ func main() {
 		log.Fatalf("Failed to get merge request")
 	}
 
-	descriptionPoints := strings.Split(mr.Description, "\n")
-	for i := range descriptionPoints {
-		descriptionPoints[i] = descriptionPoints[i]
-	}
-	description := strings.Join(descriptionPoints, "\n")
-
 	message := fmt.Sprintf(
-		"Title: %s\nDescription:\n%s\n\nState: %s\nTarget Branch: %s\nAuthor: %s (%s)\nWeb URL: %s\nHas Conflicts: %t",
+		"Title: %s\nState: %s\nTarget Branch: %s\nAuthor: %s (%s)\nWeb URL: %s\nHas Conflicts: %t",
 		mr.Title,
-		description,
 		mr.State,
 		mr.TargetBranch,
 		mr.Author.Name,
