@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN go build -o go-bearer
+RUN go build -o main
 
 # Stage 2: Final stage (smaller image with only the binary)
 FROM alpine:3.14

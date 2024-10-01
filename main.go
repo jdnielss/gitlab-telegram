@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 )
 
@@ -19,14 +20,23 @@ func main() {
 	projectID := flag.String("pid", "", "Gitlab project id")
 	mergeRequestIID := flag.Int("mid", 0, "Gitlab merge request id")
 
-	// Initialize GitLab client
+	flag.Parse()
+
+	if *telegramToken == "" || *chatID == "" || *gitlabBaseURL == "" || *gitlabToken == "" || *projectID == "" || *mergeRequestIID == 0 {
+		fmt.Println("Missing required arguments")
+		flag.Usage()
+		os.Exit(1)
+	}
+
 	git, err := gitlab.NewClient(*gitlabToken, gitlab.WithBaseURL(*gitlabBaseURL))
+
 	if err != nil {
 		log.Fatalf("Failed to create client")
 	}
 
 	// Fetch merge request details
-	mr, _, err := git.MergeRequests.GetMergeRequest(projectID, *mergeRequestIID, nil)
+	mr, _, err := git.MergeRequests.GetMergeRequest(*projectID, *mergeRequestIID, nil)
+
 	if err != nil {
 		log.Fatalf("Failed to get merge request")
 	}
