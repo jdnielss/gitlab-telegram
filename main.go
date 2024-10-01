@@ -90,7 +90,7 @@ func sendMessageToTelegram(token, chatID, message string) {
 	defer resp.Body.Close() // Proper use of defer to close the response body
 
 	if resp.StatusCode != http.StatusOK {
-		log.Fatalf("Failed to send message.")
+		log.Fatalf("Failed to send message. %v", resp)
 	}
 
 	fmt.Println("Message sent to Telegram successfully!")
